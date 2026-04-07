@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from "cors";
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+dotenv.config();
 import Todo from './Schema/TodoSchema.js';
 mongoose.connect("mongodb://localhost:27017/todoapp") .then(()=>{
     console.log("connected to database");
@@ -65,8 +67,8 @@ app.post("/deletetodo",async(req,res)=>{
     res.status(200).json({message:"todo deleted successfully",id});
 })
 
-
-app.listen(5000,()=>{
+const PORT = process.env.PORT || 5000;
+app.listen(PORT,()=>{
     console.log("server is live");
 });
 
