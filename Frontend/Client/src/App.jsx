@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import './App.css'
 const App = () => {
   const inputref=useRef(null);
+  const inputref2=useRef(false);
   const [title,setTitle]=useState("");
   const[content,setContent]=useState("");
 const [list,setList]=useState([]);
@@ -93,10 +94,18 @@ const DeleteTodo=async(id)=>{
         placeholder="Enter the title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        onKeyDown={(e)=>{
+          if(e.key=='enter'){
+            if(!inputref2){
+              inputref2.current.focus();
+            }
+          }
+        }}
       />
 
       <label>Content</label>
       <input
+      ref={inputref2}
         type="text"
         placeholder="Enter the content"
         value={content}
