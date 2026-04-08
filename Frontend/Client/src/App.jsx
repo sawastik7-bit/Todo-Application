@@ -1,9 +1,37 @@
 import React, { useState } from 'react'
+import { useEffect } from 'react';
+import { useRef } from 'react';
 import './App.css'
 const App = () => {
+  const inputref=useRef(null);
   const [title,setTitle]=useState("");
   const[content,setContent]=useState("");
 const [list,setList]=useState([]);
+
+useEffect(()=>{
+
+const fetchData=async()=>{
+  try{
+    const result=await fetch("http://localhost:5000/gettodos",{
+      method:"POST",
+      headers:{
+        
+        "Content-Type":"application/json",
+      }
+    });
+    if(!result.ok){
+      return;
+    }
+    const data=await result.json();
+    setList(data);
+    console.log(data.title);
+  }catch(error){
+    alert("error in fetching the data",error);
+  }
+}
+fetchData();
+inputref.current.focus();
+},[]);
 
 const AddTodo=async()=>{
   if(!title || !content){
@@ -60,6 +88,7 @@ const DeleteTodo=async(id)=>{
 
       <label>Title</label>
       <input
+      ref={inputref}
         type="text"
         placeholder="Enter the title"
         value={title}
@@ -72,7 +101,11 @@ const DeleteTodo=async(id)=>{
         placeholder="Enter the content"
         value={content}
         onChange={(e) => setContent(e.target.value)}
-      />
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            AddTodo();
+          }
+      }}  />
 
       <button onClick={AddTodo}>Add Todo</button>
     </div>

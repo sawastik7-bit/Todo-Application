@@ -54,18 +54,28 @@ app.post("/deletetodo", async (req, res) => {
 
   res.status(200).json({ id });
 });
-app.post("/deletetodo",async(req,res)=>{
-    const {id}=req.body;
-    if(!id){
-        res.status(400).json({message:"id is required"});
+
+
+app.post("/gettodos",async(req,res)=>{
+  try{
+    const result=await Todo.find({});
+    if(!result){
+      res.status(404).json({message:"no todos found"});
     }
 
-    const result=await Todo.findByIdAndDelete(id);
-    if(!result){
-        res.status(404).json({message:"todo not found"});
+   const todos= result.map((item)=>{
+    return {
+      id:item._id,
+      title:item.title,
+      content:item.content
     }
-    res.status(200).json({message:"todo deleted successfully",id});
-})
+   });
+   res.status(201).json(todos);
+
+  }catch(error){
+    res.status(500).json({message:"internal server error"});
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT,()=>{
