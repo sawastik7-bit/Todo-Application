@@ -24,7 +24,6 @@ const App = () => {
         const data = await result.json();
         setList(data);
       } catch (error) {
-        alert('error in fetching the data');
         console.error(error);
       }
     };
